@@ -57,10 +57,24 @@ namespace DeleteWeapon
             if (Rage.Game.LocalPlayer.Character.Inventory.EquippedWeapon != null
                 && Rage.Game.LocalPlayer.Character.Inventory.EquippedWeapon.Hash == w)
             {
+                
                 Rage.Game.LocalPlayer.Character.Inventory.GiveNewWeapon(new WeaponAsset("WEAPON_UNARMED"), 0, true);
+
+                #region legacy/incorrect
+                //Rage.Game.LocalPlayer.Character.Inventory.EquippedWeapon = new WeaponAsset("WEAPON_UNARMED");
+                //For some reason it does not work, throws exception that the player does not have that weapon.
+                #endregion
             }
-            Rage.Game.LocalPlayer.Character.Inventory.Weapons.Remove(new WeaponDescriptor(new WeaponAsset((uint) w)));
+
+            #region legacy/incorrect
+            //Old way of doing it
+            //Rage.Game.LocalPlayer.Character.Inventory.Weapons.Remove(new WeaponDescriptor(new WeaponAsset((uint) w)));
+            #endregion
+
+            Rage.Game.LocalPlayer.Character.Inventory.Weapons.Remove(w);
 
         }
+
+
     }
 }
