@@ -1,8 +1,10 @@
 ﻿using Rage;
 using Rage.Attributes;
 using System;
+using System.ComponentModel;
 using System.Configuration;
 using System.Security.Permissions;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -31,18 +33,22 @@ namespace DeleteWeapon
 
         private static IniModel settings;
 
+        private static void Notify(string text)
+        {
+            Game.DisplayNotification("commonmenu","shop_gunclub_icon_b", $"DeleteWeapon v{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version}", "by meszolym", text);
+        }
+
         public static void Main()
         {
 
             settings = IniModel.Load("Plugins\\DeleteWeapon.ini");
 
-            Game.DisplayNotification("DeleteWeapon by meszolym loaded!\n" +
-                "You can now use these commands:\n" +
-                "\"DeleteEquippedWeapon\",\n" +
-                "\"DeleteFlashLight\",\n" +
-                "\"DeleteBaton\"," +
-                "\"DeleteWeapon\"," +
-                "\"DeleteVehicle\"");
+            Notify($"Plugin loaded!\n" +
+                "You can now use the hotkeys specified in the ini, and also the commands (they start with Delete)");
+            Notify("Please note that in the current version, confirmation behaviours are not implemented!\n" +
+                "This means that when using hotkeys, you will <u>not</u> get asked to confirm your actions!");
+
+            
 
             GameFiber.StartNew(Thread);
         }
@@ -58,7 +64,7 @@ namespace DeleteWeapon
                     && (settings.DeleteEquippedWeaponModifierKey == null
                         || Game.IsKeyDownRightNow((Keys)settings.DeleteEquippedWeaponModifierKey)))
                 {
-                    if (!settings.ConfirmWeaponDeletion || GetConfirmation().Result)
+                    if (!settings.ConfirmWeaponDeletion /*|| await GetConfirmation()*/ )
                     {
                         DeleteEquippedWeapon();
                     }
@@ -107,7 +113,7 @@ namespace DeleteWeapon
         {
             if (!Player.Inventory.Weapons.Contains(w))
             {
-                Game.Console.Print("Weapon not found in inventory!");
+                Game.LogTrivial("Weapon not found in inventory!");
                 return;
             }
             if (Player.Inventory.EquippedWeapon != null
@@ -134,13 +140,25 @@ namespace DeleteWeapon
         [ConsoleCommand]
         public static void DeleteVehicle()
         {
-            
-            if (ClosestVeh.HasDriver && ClosestVeh.Driver != Player)
+            try
             {
-                ClosestVeh.Driver.Delete();
-            }
+                if (ClosestVeh.HasDriver && ClosestVeh.Driver != Player)
+                {
+                    ClosestVeh.Driver.Delete();
+                }
 
-            ClosestVeh.Delete();
+                ClosestVeh.Delete();
+            }
+            catch
+            {
+                Notify("Can't get/delete closest vehicle, try again!");
+            }
+        }
+
+        [ConsoleCommand]
+        public static void ReloadDWSettings()
+        {
+            settings = IniModel.Load("Plugins\\DeleteWeapon.ini");
         }
 
         private static void DeleteVehicleByHotkey()
@@ -148,18 +166,18 @@ namespace DeleteWeapon
             if ((Player.IsInAnyVehicle(true)
                     && Player.CurrentVehicle == ClosestVeh
                     && (!settings.ConfirmPlayerVehicleDeletion
-                        || GetConfirmation().Result))
+                        /*|| await GetConfirmation()*/))
                 || (!settings.ConfirmVehicleDeletion)
-                    || GetConfirmation().Result)
+                    /*|| await GetConfirmation()*/)
             {
                 DeleteVehicle();
                 return;
             }
         }
 
-        public static async Task<bool> GetConfirmation()
+        /*public static async Task<bool> GetConfirmation()
         {
-            //Code
-        }
+            To be implemented... When I figure it out...
+        }*/
     }
 }

@@ -131,15 +131,14 @@ namespace DeleteWeapon
         {
             get
             {
-                if (this.YesKey != null && this.NoKey != null)
+                /*if (this.YesKey == null || this.NoKey == null || this.NoKey == this.YesKey)
                 {
-                    return confirmWeaponDeletion;
-                }
-                else
-                {
-                    Game.Console.Print("No key for YesKey or NoKey, behaviour defaults to false");
+                    Game.LogTrivial("No key for YesKey or NoKey, or both are the same, behaviour defaults to false");
                     return false;
                 }
+                return confirmWeaponDeletion;*/
+
+                return false;
             }
         }
 
@@ -149,15 +148,13 @@ namespace DeleteWeapon
         {
             get
             {
-                if (this.YesKey != null && this.NoKey != null)
+                /*if (this.YesKey == null || this.NoKey == null || this.NoKey == this.YesKey)
                 {
-                    return confirmVehicleDeletion;
-                }
-                else
-                {
-                    Game.Console.Print("No key for YesKey or NoKey, behaviour defaults to false");
+                    Game.LogTrivial("No key for YesKey or NoKey, or both are the same, behaviour defaults to false");
                     return false;
                 }
+                return confirmVehicleDeletion;*/
+                return false;
             }
         }
 
@@ -167,15 +164,13 @@ namespace DeleteWeapon
         {
             get
             {
-                if (this.YesKey != null && this.NoKey != null)
+                /*if (this.YesKey == null || this.NoKey == null || this.NoKey == this.YesKey)
                 {
-                    return confirmPlayerVehicleDeletion;
-                }
-                else
-                {
-                    Game.Console.Print("No key for YesKey or NoKey, behaviour defaults to false");
+                    Game.LogTrivial("No key for YesKey or NoKey, or both are the same, behaviour defaults to false");
                     return false;
                 }
+                return confirmPlayerVehicleDeletion;*/
+                return false;
             }
         }
 
@@ -199,7 +194,7 @@ namespace DeleteWeapon
             else
             {
                 ini.Write("Keys", "DeleteEquippedWeaponKey", "None");
-                Game.Console.Print("No key for DeleteEquippedWeapon");
+                Game.LogTrivial("No key for DeleteEquippedWeapon");
                 loadedModel.deleteEquippedWeaponKey = Keys.None;
 
 
@@ -212,7 +207,7 @@ namespace DeleteWeapon
             else
             {
                 ini.Write("Keys", "DeleteEquippedWeaponModifierKey", "None");
-                Game.Console.Print("No key for DeleteEquippedWeaponModifierKey");
+                Game.LogTrivial("No key for DeleteEquippedWeaponModifierKey");
                 loadedModel.deleteEquippedWeaponModifierKey= Keys.None;
 
             }
@@ -224,7 +219,7 @@ namespace DeleteWeapon
             else
             {
                 ini.Write("Keys", "DeleteNearestVehicleKey", "None");
-                Game.Console.Print("No key for DeleteNearestVehicle");
+                Game.LogTrivial("No key for DeleteNearestVehicle");
                 loadedModel.deleteNearestVehicleKey= Keys.None;
             }
 
@@ -236,7 +231,7 @@ namespace DeleteWeapon
             else
             {
                 ini.Write("Keys", "DeleteNearestVehicleModifierKey", "None");
-                Game.Console.Print("No key for DeleteNearestVehicle");
+                Game.LogTrivial("No key for DeleteNearestVehicle");
                 loadedModel.deleteNearestVehicleModifierKey= Keys.None;
             }
 
@@ -247,7 +242,7 @@ namespace DeleteWeapon
             else
             {
                 ini.Write("Keys", "YesKey", "None");
-                Game.Console.Print("No key for YesKey");
+                Game.LogTrivial("No key for YesKey");
                 loadedModel.yesKey= Keys.None;
             }
 
@@ -258,7 +253,7 @@ namespace DeleteWeapon
             else
             {
                 ini.Write("Keys", "YesModifierKey", "None");
-                Game.Console.Print("No key for YesModifierKey");
+                Game.LogTrivial("No key for YesModifierKey");
                 loadedModel.yesModifierKey= Keys.None;
             }
 
@@ -269,7 +264,7 @@ namespace DeleteWeapon
             else
             {
                 ini.Write("Keys", "NoKey", "None");
-                Game.Console.Print("No key for NoKey");
+                Game.LogTrivial("No key for NoKey");
                 loadedModel.noKey= Keys.None;
             }
 
@@ -280,7 +275,7 @@ namespace DeleteWeapon
             else
             {
                 ini.Write("Keys", "NoModifierKey", "None");
-                Game.Console.Print("No key for NoModifierKey");
+                Game.LogTrivial("No key for NoModifierKey");
                 loadedModel.noModifierKey= Keys.None;
             }
             #endregion
@@ -288,34 +283,34 @@ namespace DeleteWeapon
 
             if (ini.DoesKeyExist("Behaviour", "ConfirmWeaponDeletion"))
             {
-                loadedModel.confirmWeaponDeletion = ini.ReadBoolean("Behaviour", "ConfirmWeaponDeletion", false);
+                loadedModel.confirmWeaponDeletion = bool.Parse(ini.ReadString("Behaviour", "ConfirmWeaponDeletion"));
             }
             else
             {
-                ini.Write("Behaviour", "ConfirmWeaponDeletion", false);
-                Game.Console.Print("No value for ConfirmWeaponDeletion");
+                ini.Write("Behaviour", "ConfirmWeaponDeletion", "False");
+                Game.LogTrivial("No value for ConfirmWeaponDeletion");
                 loadedModel.confirmWeaponDeletion = false;
             }
 
             if (ini.DoesKeyExist("Behaviour", "ConfirmVehicleDeletion"))
             {
-                loadedModel.confirmWeaponDeletion = ini.ReadBoolean("Behaviour", "ConfirmVehicleDeletion", false);
+                loadedModel.confirmVehicleDeletion = bool.Parse(ini.ReadString("Behaviour", "ConfirmVehicleDeletion"));
             }
             else
             {
-                ini.Write("Behaviour", "ConfirmVehicleDeletion", false);
-                Game.Console.Print("No value for ConfirmVehicleDeletion");
+                ini.Write("Behaviour", "ConfirmVehicleDeletion", "False");
+                Game.LogTrivial("No value for ConfirmVehicleDeletion");
                 loadedModel.confirmVehicleDeletion = false;
             }
 
             if (ini.DoesKeyExist("Behaviour", "ConfirmPlayerVehicleDeletion"))
             {
-                loadedModel.confirmWeaponDeletion = ini.ReadBoolean("Behaviour", "ConfirmPlayerVehicleDeletion", false);
+                loadedModel.confirmPlayerVehicleDeletion = bool.Parse(ini.ReadString("Behaviour", "ConfirmPlayerVehicleDeletion"));
             }
             else
             {
-                ini.Write("Behaviour", "ConfirmPlayerVehicleDeletion", false);
-                Game.Console.Print("No value for ConfirmPlayerVehicleDeletion");
+                ini.Write("Behaviour", "ConfirmPlayerVehicleDeletion", "False");
+                Game.LogTrivial("No value for ConfirmPlayerVehicleDeletion");
                 loadedModel.confirmPlayerVehicleDeletion = false;
             }
             
