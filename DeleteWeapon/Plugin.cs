@@ -97,6 +97,22 @@ namespace DeleteWeapon
         }
 
         [ConsoleCommand]
+        public static void DeleteAllWeapons()
+        {
+            foreach (var w  in Player.Inventory.Weapons)
+            {
+                DeleteWeapon(w.Hash);
+            }
+
+        }
+
+        [ConsoleCommand]
+        public static void DeleteWeaponMods()
+        {
+            
+        }
+
+        [ConsoleCommand]
         public static void DeleteFlashLight()
         {
             DeleteWeapon(WeaponHash.Flashlight);
