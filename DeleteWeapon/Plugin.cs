@@ -5,6 +5,9 @@ using System;
 using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Security.Permissions;
 using System.Text;
 using System.Threading;
@@ -51,9 +54,59 @@ namespace DeleteWeapon
             Notify($"Plugin loaded!\n" +
                 "You can now use the hotkeys specified in the ini, and also the commands (they start with Delete)");
 
-            
+            CheckForUpdate();
 
             GameFiber.StartNew(MainThread);
+        }
+
+        private static void CheckForUpdate()
+        {
+
+            if (GetLatestVersion() > System.Reflection.Assembly.GetExecutingAssembly().GetName().Version)
+            {
+                Notify("New version available on LCPDFR.com! Make sure to update the plugin to get the best experience!");
+            }
+
+            
+        }
+
+        private static Version GetLatestVersion()
+        {
+            string latestVersion = null;
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    latestVersion = client.GetStringAsync(
+                        "https://www.lcpdfr.com/applications/downloadsng/interface/api.php?do=checkForUpdates&fileId=44733&beta=false&textOnly=true"
+                        ).Result;
+                }
+            }
+            catch (Exception e)
+            {
+                Game.LogTrivial("Couldn't get latest version from LCPDFR.com!");
+            }
+
+
+            if (latestVersion.Any(x => !char.IsNumber(x)))
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (char c in latestVersion)
+                {
+                    if (char.IsNumber(c) || c == '.')
+                    {
+                        sb.Append(c);
+                    }
+                }
+                latestVersion = sb.ToString();
+            }
+            Version lv;
+            if (Version.TryParse(latestVersion, out lv))
+            {
+                return lv;
+            }
+            Game.LogTrivial("Couldn't parse latest version from LCPDFR.com!");
+            return null;
         }
 
         public static void MainThread()
