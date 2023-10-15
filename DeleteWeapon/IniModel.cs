@@ -131,14 +131,12 @@ namespace DeleteWeapon
         {
             get
             {
-                /*if (this.YesKey == null || this.NoKey == null || this.NoKey == this.YesKey)
+                if (this.YesKey == null || this.NoKey == null || this.NoKey == this.YesKey)
                 {
                     Game.LogTrivial("No key for YesKey or NoKey, or both are the same, behaviour defaults to false");
                     return false;
                 }
-                return confirmWeaponDeletion;*/
-
-                return false;
+                return confirmWeaponDeletion;
             }
         }
 
@@ -148,13 +146,12 @@ namespace DeleteWeapon
         {
             get
             {
-                /*if (this.YesKey == null || this.NoKey == null || this.NoKey == this.YesKey)
+                if (this.YesKey == null || this.NoKey == null || this.NoKey == this.YesKey)
                 {
                     Game.LogTrivial("No key for YesKey or NoKey, or both are the same, behaviour defaults to false");
                     return false;
                 }
-                return confirmVehicleDeletion;*/
-                return false;
+                return confirmVehicleDeletion;
             }
         }
 
@@ -164,13 +161,12 @@ namespace DeleteWeapon
         {
             get
             {
-                /*if (this.YesKey == null || this.NoKey == null || this.NoKey == this.YesKey)
+                if (this.YesKey == null || this.NoKey == null || this.NoKey == this.YesKey)
                 {
                     Game.LogTrivial("No key for YesKey or NoKey, or both are the same, behaviour defaults to false");
                     return false;
                 }
-                return confirmPlayerVehicleDeletion;*/
-                return false;
+                return confirmPlayerVehicleDeletion;
             }
         }
 

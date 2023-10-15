@@ -49,12 +49,15 @@ namespace DeleteWeapon
 
             Notify($"Plugin loaded!\n" +
                 "You can now use the hotkeys specified in the ini, and also the commands (they start with Delete)");
-            Notify("Please note that in the current version, confirmation behaviours are not implemented!\n" +
-                "This means that when using hotkeys, you will <u>not</u> get asked to confirm your actions!");
 
             
 
             GameFiber.StartNew(MainThread);
+        }
+
+        public static void ShowSettings()
+        {
+            Game.Console.Print(settings.ToString());
         }
 
        public static void MainThread()
@@ -68,16 +71,9 @@ namespace DeleteWeapon
                     && (settings.DeleteEquippedWeaponModifierKey == null
                         || Game.IsKeyDownRightNow((Keys)settings.DeleteEquippedWeaponModifierKey)))
                 {
-                    if (!settings.ConfirmWeaponDeletion)
+                    if (!settings.ConfirmWeaponDeletion || ConfirmationTask("weapon deletion"))
                     {
                         DeleteEquippedWeapon();
-                    }
-                    else
-                    {
-                        if (ConfirmationTask())
-                        {
-                            DeleteEquippedWeapon();
-                        }
                     }
                 }
 
@@ -95,11 +91,12 @@ namespace DeleteWeapon
             }
        }
 
-        public static bool ConfirmationTask()
+        private static bool ConfirmationTask(string starter)
         {
             Stopwatch s = new Stopwatch();
             s.Start();
-            while (s.Elapsed < TimeSpan.FromSeconds(10))
+            Notify($"Awaiting confirmation for {starter}. You have 10 seconds to confirm this action.");
+            while (s.Elapsed <= TimeSpan.FromSeconds(10))
             {
                 Rage.GameFiber.Yield();
 
@@ -226,9 +223,9 @@ namespace DeleteWeapon
             if ((Player.IsInAnyVehicle(true)
                     && Player.CurrentVehicle == ClosestVeh
                     && (!settings.ConfirmPlayerVehicleDeletion
-                        || ConfirmationTask()))
+                        || ConfirmationTask("own vehicle deletion")))
                 || (!settings.ConfirmVehicleDeletion
-                        || ConfirmationTask()))
+                        || ConfirmationTask("vehicle deletion")))
             {
                 DeleteVehicle();
                 return;
