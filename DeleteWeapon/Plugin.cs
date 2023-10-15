@@ -1,5 +1,6 @@
 ﻿using Rage;
 using Rage.Attributes;
+using Rage.ConsoleCommands.AutoCompleters;
 using System;
 using System.ComponentModel;
 using System.Configuration;
@@ -109,7 +110,14 @@ namespace DeleteWeapon
         [ConsoleCommand]
         public static void DeleteWeaponMods()
         {
-            
+            if (Player.Inventory.EquippedWeapon != null)
+            {
+                var w = Player.Inventory.EquippedWeapon.Asset;
+                var a = Player.Inventory.EquippedWeapon.Ammo;
+                DeleteEquippedWeapon();
+                Player.Inventory.GiveNewWeapon(w, a, true);
+            }
+                
         }
 
         [ConsoleCommand]
