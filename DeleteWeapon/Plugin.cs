@@ -4,9 +4,12 @@ using Rage.ConsoleCommands.AutoCompleters;
 using System;
 using System.ComponentModel;
 using System.Configuration;
+using System.Diagnostics;
 using System.Security.Permissions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
 
 [assembly: Rage.Attributes.Plugin("DeleteWeapon", Description = "This plugin lets you delete weapons", Author = "meszolym")]
@@ -51,10 +54,10 @@ namespace DeleteWeapon
 
             
 
-            GameFiber.StartNew(Thread);
+            GameFiber.StartNew(MainThread);
         }
 
-       public static void Thread()
+       public static void MainThread()
        {
             while (true)
             {
@@ -65,9 +68,16 @@ namespace DeleteWeapon
                     && (settings.DeleteEquippedWeaponModifierKey == null
                         || Game.IsKeyDownRightNow((Keys)settings.DeleteEquippedWeaponModifierKey)))
                 {
-                    if (!settings.ConfirmWeaponDeletion /*|| await GetConfirmation()*/ )
+                    if (!settings.ConfirmWeaponDeletion)
                     {
                         DeleteEquippedWeapon();
+                    }
+                    else
+                    {
+                        if (ConfirmationTask())
+                        {
+                            DeleteEquippedWeapon();
+                        }
                     }
                 }
 
@@ -84,6 +94,31 @@ namespace DeleteWeapon
 
             }
        }
+
+        public static bool ConfirmationTask()
+        {
+            Stopwatch s = new Stopwatch();
+            s.Start();
+            while (s.Elapsed < TimeSpan.FromSeconds(10))
+            {
+                Rage.GameFiber.Yield();
+
+                if (Game.IsKeyDown((Keys)settings.YesKey)
+                    && (settings.YesModifierKey == null
+                        || Game.IsKeyDownRightNow((Keys)settings.YesModifierKey)))
+                {
+                    return true;
+                }
+
+                if (Game.IsKeyDown((Keys)settings.NoKey)
+                    && (settings.NoModifierKey == null
+                        || Game.IsKeyDownRightNow((Keys)settings.NoModifierKey)))
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
 
 
 
@@ -107,6 +142,7 @@ namespace DeleteWeapon
 
         }
 
+        //Looking for a better solution on this!
         [ConsoleCommand]
         public static void DeleteWeaponMods()
         {
@@ -190,18 +226,13 @@ namespace DeleteWeapon
             if ((Player.IsInAnyVehicle(true)
                     && Player.CurrentVehicle == ClosestVeh
                     && (!settings.ConfirmPlayerVehicleDeletion
-                        /*|| await GetConfirmation()*/))
-                || (!settings.ConfirmVehicleDeletion)
-                    /*|| await GetConfirmation()*/)
+                        || ConfirmationTask()))
+                || (!settings.ConfirmVehicleDeletion
+                        || ConfirmationTask()))
             {
                 DeleteVehicle();
                 return;
             }
         }
-
-        /*public static async Task<bool> GetConfirmation()
-        {
-            To be implemented... When I figure it out...
-        }*/
     }
 }
