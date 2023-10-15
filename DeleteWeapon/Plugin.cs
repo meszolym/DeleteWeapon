@@ -37,9 +37,10 @@ namespace DeleteWeapon
 
         private static IniModel settings;
 
-        private static void Notify(string text)
+        private static uint Notify(string text)
         {
-            Game.DisplayNotification("commonmenu","shop_gunclub_icon_b", $"DeleteWeapon v{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version}", "by meszolym", text);
+            var msg = Game.DisplayNotification("commonmenu","shop_gunclub_icon_b", $"DeleteWeapon v{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version}", "by meszolym", text);
+            return msg;
         }
 
         public static void Main()
@@ -55,26 +56,18 @@ namespace DeleteWeapon
             GameFiber.StartNew(MainThread);
         }
 
-        public static void ShowSettings()
+        public static void MainThread()
         {
-            Game.Console.Print(settings.ToString());
-        }
-
-       public static void MainThread()
-       {
             while (true)
             {
                 Rage.GameFiber.Yield();
 
-                if (settings.DeleteEquippedWeaponKey != null 
+                if (settings.DeleteEquippedWeaponKey != null
                     && Game.IsKeyDown((Keys)settings.DeleteEquippedWeaponKey)
                     && (settings.DeleteEquippedWeaponModifierKey == null
                         || Game.IsKeyDownRightNow((Keys)settings.DeleteEquippedWeaponModifierKey)))
                 {
-                    if (!settings.ConfirmWeaponDeletion || ConfirmationTask("weapon deletion"))
-                    {
-                        DeleteEquippedWeapon();
-                    }
+                    DeleteWeaponByHotkey();
                 }
 
                 if (settings.DeleteNearestVehicleKey != null
@@ -82,42 +75,10 @@ namespace DeleteWeapon
                     && (settings.DeleteNearestVehicleModifierModifierKey == null
                         || Game.IsKeyDownRightNow((Keys)settings.DeleteNearestVehicleModifierModifierKey)))
                 {
-                    DeleteVehicleByHotkey();                    
-                }
-
-
-
-
-            }
-       }
-
-        private static bool ConfirmationTask(string starter)
-        {
-            Stopwatch s = new Stopwatch();
-            s.Start();
-            Notify($"Awaiting confirmation for {starter}. You have 10 seconds to confirm this action.");
-            while (s.Elapsed <= TimeSpan.FromSeconds(10))
-            {
-                Rage.GameFiber.Yield();
-
-                if (Game.IsKeyDown((Keys)settings.YesKey)
-                    && (settings.YesModifierKey == null
-                        || Game.IsKeyDownRightNow((Keys)settings.YesModifierKey)))
-                {
-                    return true;
-                }
-
-                if (Game.IsKeyDown((Keys)settings.NoKey)
-                    && (settings.NoModifierKey == null
-                        || Game.IsKeyDownRightNow((Keys)settings.NoModifierKey)))
-                {
-                    return false;
+                    DeleteVehicleByHotkey();
                 }
             }
-            return false;
         }
-
-
 
         [ConsoleCommand]
         public static void DeleteEquippedWeapon()
@@ -212,14 +173,71 @@ namespace DeleteWeapon
             }
         }
 
+        private static void DeleteVehicle(Vehicle vehicle)
+        {
+            try
+            {
+                if (vehicle.HasDriver && vehicle.Driver != Player)
+                {
+                    vehicle.Driver.Delete();
+                }
+
+                vehicle.Delete();
+            }
+            catch
+            {
+                Notify("Can't get/delete vehicle, try again!");
+            }
+        }
+
         [ConsoleCommand]
         public static void ReloadDWSettings()
         {
             settings = IniModel.Load("Plugins\\DeleteWeapon.ini");
         }
 
+        private static bool ConfirmationTask(string starter)
+        {
+            Stopwatch s = new Stopwatch();
+            s.Start();
+            var msg = Notify($"Awaiting confirmation for {starter}. You have 10 seconds to confirm this action.");
+
+            while (s.Elapsed <= TimeSpan.FromSeconds(10))
+            {
+                Rage.GameFiber.Yield();
+
+                if (Game.IsKeyDown((Keys)settings.YesKey)
+                    && (settings.YesModifierKey == null
+                        || Game.IsKeyDownRightNow((Keys)settings.YesModifierKey)))
+                {
+                    Game.RemoveNotification(msg);
+                    return true;
+                }
+
+                if (Game.IsKeyDown((Keys)settings.NoKey)
+                    && (settings.NoModifierKey == null
+                        || Game.IsKeyDownRightNow((Keys)settings.NoModifierKey)))
+                {
+                    Game.RemoveNotification(msg);
+                    return false;
+                }
+            }
+            Game.RemoveNotification(msg);
+            return false;
+        }
+
+        private static void DeleteWeaponByHotkey()
+        {
+            var w = Player.Inventory.EquippedWeapon;
+            if (!settings.ConfirmWeaponDeletion || ConfirmationTask("weapon deletion"))
+            {
+                DeleteWeapon(w.Hash);
+            }
+        }
+
         private static void DeleteVehicleByHotkey()
         {
+            var v = ClosestVeh;
             if ((Player.IsInAnyVehicle(true)
                     && Player.CurrentVehicle == ClosestVeh
                     && (!settings.ConfirmPlayerVehicleDeletion
@@ -227,8 +245,7 @@ namespace DeleteWeapon
                 || (!settings.ConfirmVehicleDeletion
                         || ConfirmationTask("vehicle deletion")))
             {
-                DeleteVehicle();
-                return;
+                DeleteVehicle(v);
             }
         }
     }
