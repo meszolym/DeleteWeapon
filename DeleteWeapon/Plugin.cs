@@ -93,10 +93,7 @@ namespace DeleteWeapon
         [ConsoleCommand]
         public static void DeleteAllWeapons()
         {
-            foreach (var w  in Player.Inventory.Weapons)
-            {
-                DeleteWeapon(w.Hash);
-            }
+            Player.Inventory.Weapons.Clear();
 
         }
 
