@@ -133,7 +133,7 @@ namespace DeleteWeapon
             {
                 if (this.YesKey == null || this.NoKey == null || this.NoKey == this.YesKey)
                 {
-                    Game.LogTrivial("No key for YesKey or NoKey, or both are the same, behaviour defaults to false");
+                    InfoDisplay.Log("No key for YesKey or NoKey, or both are the same, behaviour defaults to false");
                     return false;
                 }
                 return confirmWeaponDeletion;
@@ -148,7 +148,7 @@ namespace DeleteWeapon
             {
                 if (this.YesKey == null || this.NoKey == null || this.NoKey == this.YesKey)
                 {
-                    Game.LogTrivial("No key for YesKey or NoKey, or both are the same, behaviour defaults to false");
+                    InfoDisplay.Log("No key for YesKey or NoKey, or both are the same, behaviour defaults to false");
                     return false;
                 }
                 return confirmVehicleDeletion;
@@ -163,7 +163,7 @@ namespace DeleteWeapon
             {
                 if (this.YesKey == null || this.NoKey == null || this.NoKey == this.YesKey)
                 {
-                    Game.LogTrivial("No key for YesKey or NoKey, or both are the same, behaviour defaults to false");
+                    InfoDisplay.Log("No key for YesKey or NoKey, or both are the same, behaviour defaults to false");
                     return false;
                 }
                 return confirmPlayerVehicleDeletion;
@@ -190,7 +190,7 @@ namespace DeleteWeapon
             else
             {
                 ini.Write("Keys", "DeleteEquippedWeaponKey", "None");
-                Game.LogTrivial("No key for DeleteEquippedWeapon");
+                InfoDisplay.Log("No key for DeleteEquippedWeapon");
                 loadedModel.deleteEquippedWeaponKey = Keys.None;
 
 
@@ -203,7 +203,7 @@ namespace DeleteWeapon
             else
             {
                 ini.Write("Keys", "DeleteEquippedWeaponModifierKey", "None");
-                Game.LogTrivial("No key for DeleteEquippedWeaponModifierKey");
+                InfoDisplay.Log("No key for DeleteEquippedWeaponModifierKey");
                 loadedModel.deleteEquippedWeaponModifierKey= Keys.None;
 
             }
@@ -215,7 +215,7 @@ namespace DeleteWeapon
             else
             {
                 ini.Write("Keys", "DeleteNearestVehicleKey", "None");
-                Game.LogTrivial("No key for DeleteNearestVehicle");
+                InfoDisplay.Log("No key for DeleteNearestVehicle");
                 loadedModel.deleteNearestVehicleKey= Keys.None;
             }
 
@@ -227,7 +227,7 @@ namespace DeleteWeapon
             else
             {
                 ini.Write("Keys", "DeleteNearestVehicleModifierKey", "None");
-                Game.LogTrivial("No key for DeleteNearestVehicle");
+                InfoDisplay.Log("No key for DeleteNearestVehicle");
                 loadedModel.deleteNearestVehicleModifierKey= Keys.None;
             }
 
@@ -238,7 +238,7 @@ namespace DeleteWeapon
             else
             {
                 ini.Write("Keys", "YesKey", "None");
-                Game.LogTrivial("No key for YesKey");
+                InfoDisplay.Log("No key for YesKey");
                 loadedModel.yesKey= Keys.None;
             }
 
@@ -249,7 +249,7 @@ namespace DeleteWeapon
             else
             {
                 ini.Write("Keys", "YesModifierKey", "None");
-                Game.LogTrivial("No key for YesModifierKey");
+                InfoDisplay.Log("No key for YesModifierKey");
                 loadedModel.yesModifierKey= Keys.None;
             }
 
@@ -260,7 +260,7 @@ namespace DeleteWeapon
             else
             {
                 ini.Write("Keys", "NoKey", "None");
-                Game.LogTrivial("No key for NoKey");
+                InfoDisplay.Log("No key for NoKey");
                 loadedModel.noKey= Keys.None;
             }
 
@@ -271,7 +271,7 @@ namespace DeleteWeapon
             else
             {
                 ini.Write("Keys", "NoModifierKey", "None");
-                Game.LogTrivial("No key for NoModifierKey");
+                InfoDisplay.Log("No key for NoModifierKey");
                 loadedModel.noModifierKey= Keys.None;
             }
             #endregion
@@ -284,7 +284,7 @@ namespace DeleteWeapon
             else
             {
                 ini.Write("Behaviour", "ConfirmWeaponDeletion", "False");
-                Game.LogTrivial("No value for ConfirmWeaponDeletion");
+                InfoDisplay.Log("No value for ConfirmWeaponDeletion");
                 loadedModel.confirmWeaponDeletion = false;
             }
 
@@ -295,7 +295,7 @@ namespace DeleteWeapon
             else
             {
                 ini.Write("Behaviour", "ConfirmVehicleDeletion", "False");
-                Game.LogTrivial("No value for ConfirmVehicleDeletion");
+                InfoDisplay.Log("No value for ConfirmVehicleDeletion");
                 loadedModel.confirmVehicleDeletion = false;
             }
 
@@ -306,7 +306,7 @@ namespace DeleteWeapon
             else
             {
                 ini.Write("Behaviour", "ConfirmPlayerVehicleDeletion", "False");
-                Game.LogTrivial("No value for ConfirmPlayerVehicleDeletion");
+                InfoDisplay.Log("No value for ConfirmPlayerVehicleDeletion");
                 loadedModel.confirmPlayerVehicleDeletion = false;
             }
             

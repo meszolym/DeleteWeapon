@@ -48,6 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\VehicleActions.cs" />
+    <Compile Include="Actions\WeaponActions.cs" />
+    <Compile Include="HotkeyListener.cs" />
+    <Compile Include="InfoDisplay.cs" />
     <Compile Include="IniModel.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
