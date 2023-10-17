@@ -61,10 +61,10 @@ namespace DeleteWeapon
 
         private static void CheckForUpdate()
         {
-
-            if (GetLatestVersion() > System.Reflection.Assembly.GetExecutingAssembly().GetName().Version)
+            Version newVersion = GetLatestVersion();
+            if (newVersion > System.Reflection.Assembly.GetExecutingAssembly().GetName().Version)
             {
-                Notify("New version available on LCPDFR.com! Make sure to update the plugin to get the best experience!");
+                Notify($"New version (v{newVersion}) available on LCPDFR.com! Make sure to update the plugin to get the best experience!");
             }
 
             
