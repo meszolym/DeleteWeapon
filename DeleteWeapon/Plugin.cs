@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
 
-[assembly: Rage.Attributes.Plugin("DeleteWeapon", Description = "This plugin lets you delete weapons", Author = "meszolym")]
+[assembly: Rage.Attributes.Plugin("DeleteWeapon", Description = "Do you hate using trainers? I know I do! That's why I created this plugin! Delete weapons and vehicles with ease!", Author = "meszolym", PrefersSingleInstance =true)]
 
 
 namespace DeleteWeapon
@@ -34,7 +34,7 @@ namespace DeleteWeapon
 
             CheckForUpdate();
 
-            GameFiber.StartNew(HotkeyListener.Main);
+            GameFiber.StartNew(HotkeyListener.Listen);
         }
 
         private static void CheckForUpdate()

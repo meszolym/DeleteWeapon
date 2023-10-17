@@ -13,7 +13,7 @@ namespace DeleteWeapon
 {
     internal class HotkeyListener
     {
-        public static void Main()
+        public static void Listen()
         {
             while (true)
             {
