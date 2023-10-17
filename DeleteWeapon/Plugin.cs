@@ -62,7 +62,7 @@ namespace DeleteWeapon
             }
             catch (Exception e)
             {
-                InfoDisplay.Log("Couldn't get latest version from LCPDFR.com!");
+                InfoDisplay.Log($"Couldn't get latest version from LCPDFR.com! (Message of exception thrown: {e.Message})");
             }
 
 
